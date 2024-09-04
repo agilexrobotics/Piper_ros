@@ -1,0 +1,72 @@
+piper_description:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
+  joint1_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint1
+    pid: {p: 1.0, i: 0.01, d: 5.0}
+  joint2_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint2
+    pid: {p: 1.0, i: 0.01, d: 5.0}
+  joint3_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint3
+    pid: {p: 1.0, i: 0.01, d: 5.0}
+  joint4_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint4
+    pid: {p: 1.0, i: 0.01, d: 5.0}
+  joint5_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint5
+    pid: {p: 1.0, i: 0.01, d: 5.0}
+  joint6_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint6
+    pid: {p: 1.0, i: 0.01, d: 5.0}
+  joint7_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint7
+    pid: {p: 0.01, i: 0.001, d: 0.001}
+  joint8_position_controller:
+    type: position_controllers/JointPositionController
+    joint: joint8
+    pid: {p: 0.01, i: 0.001, d: 0.001}
+
+  # gazebo_ros_control:
+  #   pid_gains:
+  #     joint1:
+  #       p: 10.0
+  #       i: 0.01
+  #       d: 0.0
+  #     joint2:
+  #       p: 10.0
+  #       i: 0.01
+  #       d: 0.0
+  #     joint3:
+  #       p: 5.0
+  #       i: 0.01
+  #       d: 0.0
+  #     joint4:
+  #       p: 5.0
+  #       i: 0.01
+  #       d: 0.0
+  #     joint5:
+  #       p: 5.0
+  #       i: 0.01
+  #       d: 0.0
+  #     joint6:
+  #       p: 5.0
+  #       i: 0.01
+  #       d: 0.0
+  #     joint7:
+  #       p: 0.05
+  #       i: 0.0
+  #       d: 0.0
+  #     joint8:
+  #       p: 0.05
+  #       i: 0.0
+  #       d: 0.0

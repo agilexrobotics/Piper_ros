@@ -1,0 +1,13 @@
+<launch>
+ 
+  <rosparam file="$(find piper_control)/config/control.yaml" command="load"/>
+ 
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/piper_description" args="joint1_position_controller joint2_position_controller joint3_position_controller joint4_position_controller joint5_position_controller joint6_position_controller joint7_position_controller joint8_position_controller joint_state_controller"/>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+    respawn="false" output="screen">
+    <remap from="/joint_states" to="/piper/joint_states" />
+  </node>
+
+</launch>
