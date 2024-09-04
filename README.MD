@@ -1,5 +1,12 @@
 # agx 机械臂
- [EN](README(EN).md)
+
+[EN](README(EN).md)
+
+![ubuntu](https://img.shields.io/badge/Ubuntu-20.04-orange.svg)
+
+|ROS |STATE|
+|---|---|
+|![ros](https://img.shields.io/badge/ROS-noetic-blue.svg)|![Pass](https://img.shields.io/badge/Pass-blue.svg)|
 
 ## 安装方法
 

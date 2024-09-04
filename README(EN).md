@@ -1,5 +1,12 @@
 # AgileX Robotic Arm
- [CN](README.MD)
+
+[CN](README.MD)
+
+![ubuntu](https://img.shields.io/badge/Ubuntu-20.04-orange.svg)
+
+|ROS |STATE|
+|---|---|
+|![ros](https://img.shields.io/badge/ROS-noetic-blue.svg)|![Pass](https://img.shields.io/badge/Pass-blue.svg)|
 
 ## Installation
 
