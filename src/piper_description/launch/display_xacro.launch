@@ -4,7 +4,7 @@
   <arg name="rviz_config" default="$(find piper_description)/rviz/piper_ctrl.rviz" />
   <param
     name="robot_description"
-    textfile="$(find piper_description)/urdf/arm.xacro" />
+    textfile="$(find piper_description)/urdf/piper_description.xacro" />
   <node
     name="joint_state_publisher_gui"
     pkg="joint_state_publisher_gui"

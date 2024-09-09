@@ -78,6 +78,10 @@ add_message_files(
   PiperStatusMsg.msg
   PosCmd.msg
 )
+add_service_files(
+  FILES
+  Enable.srv
+)
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES

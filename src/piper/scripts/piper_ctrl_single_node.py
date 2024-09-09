@@ -14,6 +14,7 @@ import argparse
 from piper_sdk import *
 from piper_sdk import C_PiperInterface
 from piper_msgs.msg import PiperStatusMsg, PosCmd
+from piper_msgs.srv import Enable, EnableResponse
 from geometry_msgs.msg import Pose
 from tf.transformations import quaternion_from_euler  # 用于欧拉角到四元数的转换
 
@@ -62,13 +63,14 @@ class C_PiperRosNode():
         self.joint_pub = rospy.Publisher('joint_states_single', JointState, queue_size=1)
         self.arm_status_pub = rospy.Publisher('arm_status', PiperStatusMsg, queue_size=1)
         self.end_pose_pub = rospy.Publisher('end_pose', Pose, queue_size=1)
+        self.enable_service = rospy.Service('enable_srv', Enable, self.handle_enable_service)  # 创建服务
         
         self.__enable_flag = False
         # joint
         self.joint_states = JointState()
         self.joint_states.name = ['joint0', 'joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
         self.joint_states.position = [0.0] * 7
-        self.joint_states.velocity = [0.0] * 7
+        self.joint_states.velocity = [0.0] * 6
         self.joint_states.effort = [0.0] * 7
         
         # 创建piper类并打开can接口
@@ -179,7 +181,7 @@ class C_PiperRosNode():
         effort_6:float = self.piper.GetArmGripperMsgs().gripper_state.grippers_effort/1000
         self.joint_states.header.stamp = rospy.Time.now()
         self.joint_states.position = [joint_0,joint_1, joint_2, joint_3, joint_4, joint_5,joint_6]  # Example values
-        self.joint_states.velocity = [vel_0, vel_1, vel_2, vel_3, vel_4, vel_5, 0.0]  # Example values
+        self.joint_states.velocity = [vel_0, vel_1, vel_2, vel_3, vel_4, vel_5]  # Example values
         self.joint_states.effort = [0, 0, 0, 0, 0, 0, effort_6]
         # 发布所有消息
         self.joint_pub.publish(self.joint_states)
@@ -283,9 +285,27 @@ class C_PiperRosNode():
         if(joint_6>80000): joint_6 = 80000
         if(joint_6<0): joint_6 = 0
         if(self.GetEnableFlag()):
+            # 设定控制模式
             self.piper.MotionCtrl_2(0x01, 0x01, 50)
+            # 设定电机速度
+            all_zeros = all(v == 0 for v in joint_data.velocity)
+            if(not all_zeros):
+                # self.piper.MotionCtrl_2(0x01, 0x01, 100)
+                lens = len(joint_data.velocity)
+                if(lens != 6):
+                    print("速度列表长度应该为6")
+                else:
+                    # 遍历速度列表
+                    for i, velocity in enumerate(joint_data.velocity):
+                        if velocity > 0:  # 如果速度是正数
+                            # 设置指定位置的关节速度为这个正数速度
+                            # self.piper.SearchMotorMaxAngleSpdAccLimit(i+1,0x01)
+                            # self.piper.MotorAngleLimitMaxSpdSet(i+1)
+                            pass
+            # 给定关节角位置
             self.piper.JointCtrl(joint_0, joint_1, joint_2, 
                                     joint_3, joint_4, joint_5)
+            # 如果末端夹爪存在，则发送末端夹爪控制
             if(self.girpper_exist):
                 self.piper.GripperCtrl(abs(joint_6), 1000, 0x01, 0)
             self.piper.MotionCtrl_2(0x01, 0x01, 50)
@@ -309,6 +329,54 @@ class C_PiperRosNode():
             self.piper.DisableArm(7)
             if(self.girpper_exist):
                 self.piper.GripperCtrl(0,1000,0x00, 0)
+    
+    def handle_enable_service(self,req):
+        rospy.loginfo(f"Received request: {req.enable_request}")
+        enable_flag = False
+        loop_flag = False
+        # 设置超时时间（秒）
+        timeout = 5
+        # 记录进入循环前的时间
+        start_time = time.time()
+        elapsed_time_flag = False
+        while not (loop_flag):
+            elapsed_time = time.time() - start_time
+            print("--------------------")
+            enable_flag = self.piper.GetArmLowSpdInfoMsgs().motor_1.foc_status.driver_enable_status and \
+                self.piper.GetArmLowSpdInfoMsgs().motor_2.foc_status.driver_enable_status and \
+                self.piper.GetArmLowSpdInfoMsgs().motor_3.foc_status.driver_enable_status and \
+                self.piper.GetArmLowSpdInfoMsgs().motor_4.foc_status.driver_enable_status and \
+                self.piper.GetArmLowSpdInfoMsgs().motor_5.foc_status.driver_enable_status and \
+                self.piper.GetArmLowSpdInfoMsgs().motor_6.foc_status.driver_enable_status
+            print("使能状态:",enable_flag)
+            if(req.enable_request):
+                self.piper.EnableArm(7)
+                self.piper.GripperCtrl(0,1000,0x01, 0)
+            else: 
+                self.piper.DisableArm(7)
+                self.piper.GripperCtrl(0,1000,0x02, 0)
+            if(enable_flag):
+                self.__enable_flag = True
+            else:
+                self.__enable_flag = False
+            print("--------------------")
+            if(enable_flag == req.enable_request):
+                loop_flag = True
+                enable_flag = True
+            else: 
+                loop_flag = False
+                enable_flag = False
+            # 检查是否超过超时时间
+            if elapsed_time > timeout:
+                print("超时....")
+                elapsed_time_flag = True
+                enable_flag = False
+                loop_flag = True
+                break
+            time.sleep(0.5)
+        response = enable_flag
+        rospy.loginfo(f"Returning response: {response}")
+        return EnableResponse(response)
 
 if __name__ == '__main__':
     try:
