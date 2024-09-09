@@ -135,9 +135,33 @@ roslaunch piper start_single_piper.launch
 roslaunch piper start_single_piper_rviz.launch
 ```
 
+如果只是单独启动了控制节点，没有启动rviz
+
+`rostopic list`
+
+```shell
+/arm_status #机械臂状态，详见下文
+/enable_flag #使能标志位，发送给节点，发送true用来使能
+/end_pose #机械臂末端位姿状态反馈
+/joint_states #订阅关节消息，给这个消息发送关节位置能控制机械臂运动
+/joint_states_single #机械臂关节状态反馈
+/pos_cmd #末端控制消息
+```
+
 ## 注意事项
 
 - 需要先激活can设备，并且设置正确的波特率，才可以读取机械臂消息或者控制机械臂
+- 如果出现
+
+  ```shell
+  使能状态: False
+  <class 'can.exceptions.CanError'> Message NOT sent
+  <class 'can.exceptions.CanError'> Message NOT sent
+  ```
+
+  说明机械臂没有与can模块连同，拔插usb后，重新启动机械臂，再激活can模块，然后尝试重新启动节点
+
+- 如果打开 了自动使能，尝试使能5s没有成功后，会自动退出程序
 
 ### piper自定义消息
 
