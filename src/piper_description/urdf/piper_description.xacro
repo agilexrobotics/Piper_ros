@@ -1,38 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot
-  name="piper_description"
+  name="arm"
   xmlns:xacro="http://ros.org/wiki/xacro">
-<!--  -->
+<!-- world -->
   <link name="world"/>
   <joint name="fixed_base_joint" type="fixed">
       <parent link="world"/>
       <child link="base_link"/>
   </joint>
-<!--  -->
-  <xacro:macro name="transmission_block" params="tran_name joint_name motor_name">
- 
-    <transmission name="${tran_name}">
- 
-        <type>transmission_interface/SimpleTransmission</type>
- 
-        <joint name="${joint_name}">
- 
-            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
- 
-        </joint>
- 
-        <actuator name="$motor_name">
- 
-            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
- 
-            <mechanicalReduction>1</mechanicalReduction>
- 
-        </actuator>
- 
-    </transmission>
- 
-  </xacro:macro>
-<!--  -->
+<!-- arm -->
   <link
     name="base_link">
     <inertial>
@@ -129,7 +105,7 @@
       lower="-2.618"
       upper="2.618"
       effort="100"
-      velocity="0" />
+      velocity="1" />
   </joint>
   <link
     name="link2">
@@ -533,34 +509,36 @@
       link="link8" />
     <axis
       xyz="0 0 1" />
-    <!-- <limit
-      lower="0"
-      upper="0.038"
-      effort="100"
-      velocity="1" /> -->
     <limit
       lower="-0.038"
       upper="0"
-      effort="100"
+      effort="300"
       velocity="1" />
   </joint>
 
+<!-- controller -->
+  <xacro:macro name="transmission_block" params="tran_name joint_name motor_name">
+    <transmission name="${tran_name}">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${joint_name}">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="$motor_name">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+  </xacro:macro>
+
   <xacro:transmission_block tran_name="tran1" joint_name="joint1" motor_name="motor1"/>
- 
   <xacro:transmission_block tran_name="tran2" joint_name="joint2" motor_name="motor2"/>
- 
   <xacro:transmission_block tran_name="tran3" joint_name="joint3" motor_name="motor3"/>
- 
   <xacro:transmission_block tran_name="tran4" joint_name="joint4" motor_name="motor4"/>
- 
   <xacro:transmission_block tran_name="tran5" joint_name="joint5" motor_name="motor5"/>
- 
   <xacro:transmission_block tran_name="tran6" joint_name="joint6" motor_name="motor6"/>
- 
   <xacro:transmission_block tran_name="tran7" joint_name="joint7" motor_name="motor7"/>
-
   <xacro:transmission_block tran_name="tran8" joint_name="joint8" motor_name="motor8"/>
-
+<!-- gazebo -->
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
         <robotNamespace>/piper_description</robotNamespace>
@@ -580,7 +558,6 @@
     <material>Gazebo/White</material>
   </gazebo>
 
- 
   <gazebo reference="link3">
     <material>Gazebo/White</material>
   </gazebo>
