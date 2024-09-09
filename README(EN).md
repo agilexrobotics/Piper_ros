@@ -139,7 +139,7 @@ If you only start control node but don't start rviz:
 
 `rostopic list`
 
-```
+```shell
 /arm_status #Status of robotic arm. 
 /enable_flag #Enable flag, sent to the node, send "true" to enable
 /end_pose #Feedback on the end-effector pose of the robotic arm
@@ -260,11 +260,11 @@ int32 mode2// Temporarily unused
 
 ## Simulation
 
-`display_xacro.launch` 
+`display_xacro.launch`
 
 open rviz
 
-```
+```shell
 cd Piper_ros
 source devel/setup.bash
 roslaunch piper_description display_xacro.launch
@@ -284,7 +284,7 @@ Sometimes the slider window is not visible. Check if there is a window in the do
 
 Run
 
-```
+```shell
 cd Piper_ros
 source devel/setup.bash
 roslaunch piper_description gazebo_xacro.launch
@@ -294,7 +294,7 @@ roslaunch piper_description gazebo_xacro.launch
 
 After running, these will be published:
 
-```
+```shell
 /piper_description/joint_states
 /piper_description/joint1_position_controller/command
 /piper_description/joint2_position_controller/command
