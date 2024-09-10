@@ -148,6 +148,45 @@ roslaunch piper start_single_piper_rviz.launch
 /pos_cmd #末端控制消息
 ```
 
+rosservice list
+
+```shell
+/enable_srv #机械臂使能服务端
+```
+
+使能机械臂
+
+```shell
+# call 服务端
+rosservice call /enable_srv "enable_request: true"
+# pub topic
+rostopic pub /enable_flag std_msgs/Bool "data: true"
+```
+
+失能机械臂
+
+```shell
+# call 服务端
+rosservice call /enable_srv "enable_request: false"
+# pub topic
+rostopic pub /enable_flag std_msgs/Bool "data: false"
+```
+
+发布关节消息
+
+注意，机械臂会抬起，请确保机械臂工作范围内无障碍
+
+```shell
+rostopic pub /joint_states sensor_msgs/JointState "header:
+  seq: 0
+  stamp: {secs: 0, nsecs: 0}
+  frame_id: ''
+name: ['']
+position: [0.2,0.2,-0.2,0.3,-0.2,0.5,0.01]
+velocity: [0,0,0,0,0,0,10]
+effort: [0,0,0,0,0,0,0.5]" 
+```
+
 ## 注意事项
 
 - 需要先激活can设备，并且设置正确的波特率，才可以读取机械臂消息或者控制机械臂
