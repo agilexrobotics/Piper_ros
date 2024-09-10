@@ -295,7 +295,7 @@ class C_PiperRosNode():
                     vel_all = round(joint_data.velocity[6])
                     if (vel_all > 100): vel_all = 100
                     if (vel_all < 0): vel_all = 0
-                    rospy.loginfo("vel_all: %f", vel_all)
+                    rospy.loginfo("vel_all: %d", vel_all)
                     self.piper.MotionCtrl_2(0x01, 0x01, vel_all)
                 # elif(lens == 7):
                 #     # 遍历速度列表
@@ -312,11 +312,12 @@ class C_PiperRosNode():
             # 如果末端夹爪存在，则发送末端夹爪控制
             if(self.girpper_exist):
                 if(len(joint_data.effort) == 7):
-                    gripper_effort = round(joint_data.effort[6])
+                    gripper_effort = joint_data.effort[6]
                     if (gripper_effort > 3): gripper_effort = 3
                     if (gripper_effort < 0.5): gripper_effort = 0.5
                     rospy.loginfo("gripper_effort: %f", gripper_effort)
-                    self.piper.GripperCtrl(abs(joint_6), gripper_effort*1000, 0x01, 0)
+                    gripper_effort = round(gripper_effort*1000)
+                    self.piper.GripperCtrl(abs(joint_6), gripper_effort, 0x01, 0)
                 # 默认1N
                 else: self.piper.GripperCtrl(abs(joint_6), 1000, 0x01, 0)
     
