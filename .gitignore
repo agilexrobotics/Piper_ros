@@ -3,6 +3,7 @@ src/CMakeLists.txt
 devel
 build
 .vscode
+.idea
 src/piper/backup
 .catkin_workspace
 *.log
