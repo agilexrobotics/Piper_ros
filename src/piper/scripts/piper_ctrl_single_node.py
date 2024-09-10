@@ -137,7 +137,7 @@ class C_PiperRosNode():
             self.PublishArmEndPose()
             self.PublishArmJointAndGripper()
             rate.sleep()
-    
+
     def PublishArmState(self):
         # 机械臂状态
         arm_status = PiperStatusMsg()
@@ -266,13 +266,13 @@ class C_PiperRosNode():
         factor = 57324.840764 #1000*180/3.14
         factor1 = 57.32484
         rospy.loginfo("Received Joint States:")
-        rospy.loginfo("joint_0: %f", joint_data.position[0]*1)
-        rospy.loginfo("joint_1: %f", joint_data.position[1]*1)
-        rospy.loginfo("joint_2: %f", joint_data.position[2]*1)
-        rospy.loginfo("joint_3: %f", joint_data.position[3]*1)
-        rospy.loginfo("joint_4: %f", joint_data.position[4]*1)
-        rospy.loginfo("joint_5: %f", joint_data.position[5]*1)
-        rospy.loginfo("joint_6: %f", joint_data.position[6]*1)
+        rospy.loginfo("joint_0: %f", joint_data.position[0])
+        rospy.loginfo("joint_1: %f", joint_data.position[1])
+        rospy.loginfo("joint_2: %f", joint_data.position[2])
+        rospy.loginfo("joint_3: %f", joint_data.position[3])
+        rospy.loginfo("joint_4: %f", joint_data.position[4])
+        rospy.loginfo("joint_5: %f", joint_data.position[5])
+        rospy.loginfo("joint_6: %f", joint_data.position[6])
         joint_0 = round(joint_data.position[0]*factor)
         joint_1 = round(joint_data.position[1]*factor)
         joint_2 = round(joint_data.position[2]*factor)
@@ -285,31 +285,40 @@ class C_PiperRosNode():
         if(joint_6>80000): joint_6 = 80000
         if(joint_6<0): joint_6 = 0
         if(self.GetEnableFlag()):
-            # 设定控制模式
-            self.piper.MotionCtrl_2(0x01, 0x01, 50)
             # 设定电机速度
-            all_zeros = all(v == 0 for v in joint_data.velocity)
+            if(joint_data.velocity != []):
+                all_zeros = all(v == 0 for v in joint_data.velocity)
+            else: all_zeros = True
             if(not all_zeros):
-                # self.piper.MotionCtrl_2(0x01, 0x01, 100)
                 lens = len(joint_data.velocity)
-                if(lens != 6):
-                    print("速度列表长度应该为6")
-                else:
-                    # 遍历速度列表
-                    for i, velocity in enumerate(joint_data.velocity):
-                        if velocity > 0:  # 如果速度是正数
-                            # 设置指定位置的关节速度为这个正数速度
-                            # self.piper.SearchMotorMaxAngleSpdAccLimit(i+1,0x01)
-                            # self.piper.MotorAngleLimitMaxSpdSet(i+1)
-                            pass
+                if(lens == 7):
+                    vel_all = round(joint_data.velocity[6])
+                    if (vel_all > 100): vel_all = 100
+                    if (vel_all < 0): vel_all = 0
+                    rospy.loginfo("vel_all: %f", vel_all)
+                    self.piper.MotionCtrl_2(0x01, 0x01, vel_all)
+                # elif(lens == 7):
+                #     # 遍历速度列表
+                #     for i, velocity in enumerate(joint_data.velocity):
+                #         if velocity > 0:  # 如果速度是正数
+                #             # 设置指定位置的关节速度为这个正数速度
+                #             # self.piper.SearchMotorMaxAngleSpdAccLimit(i+1,0x01)
+                #             # self.piper.MotorAngleLimitMaxSpdSet(i+1)
+                else: self.piper.MotionCtrl_2(0x01, 0x01, 30)
+            else: self.piper.MotionCtrl_2(0x01, 0x01, 30)
             # 给定关节角位置
             self.piper.JointCtrl(joint_0, joint_1, joint_2, 
                                     joint_3, joint_4, joint_5)
             # 如果末端夹爪存在，则发送末端夹爪控制
             if(self.girpper_exist):
-                self.piper.GripperCtrl(abs(joint_6), 1000, 0x01, 0)
-            self.piper.MotionCtrl_2(0x01, 0x01, 50)
-            pass
+                if(len(joint_data.effort) == 7):
+                    gripper_effort = round(joint_data.effort[6])
+                    if (gripper_effort > 3): gripper_effort = 3
+                    if (gripper_effort < 0.5): gripper_effort = 0.5
+                    rospy.loginfo("gripper_effort: %f", gripper_effort)
+                    self.piper.GripperCtrl(abs(joint_6), gripper_effort*1000, 0x01, 0)
+                # 默认1N
+                else: self.piper.GripperCtrl(abs(joint_6), 1000, 0x01, 0)
     
     def enable_callback(self, enable_flag:Bool):
         """机械臂使能回调函数
@@ -342,23 +351,23 @@ class C_PiperRosNode():
         while not (loop_flag):
             elapsed_time = time.time() - start_time
             print("--------------------")
-            enable_flag = self.piper.GetArmLowSpdInfoMsgs().motor_1.foc_status.driver_enable_status and \
-                self.piper.GetArmLowSpdInfoMsgs().motor_2.foc_status.driver_enable_status and \
-                self.piper.GetArmLowSpdInfoMsgs().motor_3.foc_status.driver_enable_status and \
-                self.piper.GetArmLowSpdInfoMsgs().motor_4.foc_status.driver_enable_status and \
-                self.piper.GetArmLowSpdInfoMsgs().motor_5.foc_status.driver_enable_status and \
-                self.piper.GetArmLowSpdInfoMsgs().motor_6.foc_status.driver_enable_status
-            print("使能状态:",enable_flag)
+            enable_list = []
+            enable_list.append(self.piper.GetArmLowSpdInfoMsgs().motor_1.foc_status.driver_enable_status)
+            enable_list.append(self.piper.GetArmLowSpdInfoMsgs().motor_2.foc_status.driver_enable_status)
+            enable_list.append(self.piper.GetArmLowSpdInfoMsgs().motor_3.foc_status.driver_enable_status)
+            enable_list.append(self.piper.GetArmLowSpdInfoMsgs().motor_4.foc_status.driver_enable_status)
+            enable_list.append(self.piper.GetArmLowSpdInfoMsgs().motor_5.foc_status.driver_enable_status)
+            enable_list.append(self.piper.GetArmLowSpdInfoMsgs().motor_6.foc_status.driver_enable_status)
             if(req.enable_request):
+                enable_flag = all(enable_list)
                 self.piper.EnableArm(7)
                 self.piper.GripperCtrl(0,1000,0x01, 0)
-            else: 
+            else:
+                enable_flag = any(enable_list)
                 self.piper.DisableArm(7)
                 self.piper.GripperCtrl(0,1000,0x02, 0)
-            if(enable_flag):
-                self.__enable_flag = True
-            else:
-                self.__enable_flag = False
+            print("使能状态:", enable_flag)
+            self.__enable_flag = enable_flag
             print("--------------------")
             if(enable_flag == req.enable_request):
                 loop_flag = True
