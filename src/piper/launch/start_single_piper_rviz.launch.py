@@ -32,6 +32,18 @@ def generate_launch_description():
         description='Enable robot arm automatically'
     )
 
+    rviz_ctrl_flag_arg = DeclareLaunchArgument(
+        'rviz_ctrl_flag',
+        default_value='true',
+        description='Start rviz flag.'
+    )
+    
+    girpper_exist_arg = DeclareLaunchArgument(
+        'girpper_exist',
+        default_value='true',
+        description='gripper'
+    )
+    
     # 包含 display_xacro.launch.py
     display_xacro_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(piper_description_path)
@@ -46,8 +58,8 @@ def generate_launch_description():
         parameters=[
             {'can_port': LaunchConfiguration('can_port')},
             {'auto_enable': LaunchConfiguration('auto_enable')},
-            {'rviz_ctrl_flag': True},
-            {'girpper_exist': True}
+            {'rviz_ctrl_flag':  LaunchConfiguration('rviz_ctrl_flag')},
+            {'girpper_exist': LaunchConfiguration('girpper_exist')}
         ],
         remappings=[
             ('joint_ctrl_single', '/joint_states')
@@ -59,5 +71,7 @@ def generate_launch_description():
         can_port_arg,
         auto_enable_arg,
         display_xacro_launch,
+        rviz_ctrl_flag_arg,
+        girpper_exist_arg,
         piper_ctrl_node
     ])

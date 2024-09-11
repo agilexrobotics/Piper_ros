@@ -16,6 +16,18 @@ def generate_launch_description():
         description='Automatically enable the Piper node.'
     )
 
+    rviz_ctrl_flag_arg = DeclareLaunchArgument(
+        'rviz_ctrl_flag',
+        default_value='false',
+        description='Start rviz flag.'
+    )
+    
+    girpper_exist_arg = DeclareLaunchArgument(
+        'girpper_exist',
+        default_value='true',
+        description='gripper'
+    )
+    
     # Define the node
     piper_node = Node(
         package='piper',
@@ -25,8 +37,8 @@ def generate_launch_description():
         parameters=[{
             'can_port': LaunchConfiguration('can_port'),
             'auto_enable': LaunchConfiguration('auto_enable'),
-            'rviz_ctrl_flag': False,
-            'girpper_exist': True,
+            'rviz_ctrl_flag': LaunchConfiguration('rviz_ctrl_flag'),
+            'girpper_exist': LaunchConfiguration('girpper_exist'),
         }],
         remappings=[
             ('joint_ctrl_single', '/joint_states'),
@@ -37,5 +49,7 @@ def generate_launch_description():
     return LaunchDescription([
         can_port_arg,
         auto_enable_arg,
+        rviz_ctrl_flag_arg,
+        girpper_exist_arg,
         piper_node
     ])
