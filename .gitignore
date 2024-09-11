@@ -1,0 +1,14 @@
+.catkin_workspace
+src/CMakeLists.txt
+devel
+build
+install
+log
+.vscode
+.idea
+src/piper/backup
+.catkin_workspace
+*.log
+*.7z
+*.zip
+*.tar
