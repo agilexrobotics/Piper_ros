@@ -1,0 +1,9 @@
+<launch>
+    <!-- 启动Gazebo  -->
+    <include file="$(find piper_description)/launch/piper_world.launch" />   
+    <!-- 启动Gazebo controllers -->
+    <include file="$(find piper_description)/launch/piper_gazebo_controller.launch" />
+    <!-- 由于和rviz启动打不开gz控制器，所以建议分开启动 -->
+    <!-- <include file="$(find piper_description)/launch/display_xacro.launch"/> -->
+    <node name="rviz_ctrl_gazebo_joint" pkg="piper_description" type="rviz_ctrl_gazebo.py" output="screen"/>
+</launch>
