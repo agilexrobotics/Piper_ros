@@ -1,6 +1,6 @@
 # AgileX Robotic Arm (foxy)
 
-[CN](README(EN).md)
+[CN](README.MD)
 
 ![ubuntu](https://img.shields.io/badge/Ubuntu-20.04-orange.svg)
 
