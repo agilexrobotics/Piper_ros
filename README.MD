@@ -1,7 +1,7 @@
 # agx 机械臂(foxy)
 ![ubuntu](https://img.shields.io/badge/Ubuntu-20.04-orange.svg)
 
-[EN](README(CN).MD)
+[EN](README(EN).MD)
 
 Test:
 
