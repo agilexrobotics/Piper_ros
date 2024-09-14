@@ -79,10 +79,6 @@ Then run`ifconfig` to check if `can_piper` appears. If it does, the CAN module h
 
 **Use the `can_config.sh`  here**
 
-在`can_config.sh`中，`EXPECTED_CAN_COUNT`参数为想要激活的can模块数量,现在假设为2
-
-然后can模块中的其中一个单独插入PC，执行
-
 In the `can_config.sh`, the `EXPECTED_CAN_COUNT` shows the number of the CAN modules you want to activate. Assume it's 2 here. 
 
 Then, insert one of the two CAN modules into the PC alone and run the script.
