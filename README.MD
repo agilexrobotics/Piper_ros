@@ -1,6 +1,8 @@
 # agx 机械臂(foxy)
 ![ubuntu](https://img.shields.io/badge/Ubuntu-22.04-orange.svg)
 
+[EN](README(EN).md)
+
 Test:
 
 |PYTHON |STATE|
