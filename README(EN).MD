@@ -2,7 +2,7 @@
 
 [CN](README.MD)
 
-![ubuntu](https://img.shields.io/badge/Ubuntu-20.04-orange.svg)
+![ubuntu](https://img.shields.io/badge/Ubuntu-22.04-orange.svg)
 
 Test:
 
