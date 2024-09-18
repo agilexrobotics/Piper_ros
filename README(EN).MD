@@ -334,7 +334,6 @@ coming...
 ```shell
 colcon build
 Starting >>> piper   
-Starting >>> piper_control
 Starting >>> piper_description
 Starting >>> piper_msgs
 Finished <<< piper [0.31s]                                                                                                              
@@ -358,13 +357,12 @@ CMake Error at CMakeLists.txt:5 (find_package):
 
 ---
 Failed   <<< piper_description [0.45s, exited with code 1]
-Aborted  <<< piper_control [0.45s]
 Aborted  <<< piper_msgs [0.45s]
 
 Summary: 1 package finished [0.55s]
   1 package failed: piper_description
-  2 packages aborted: piper_control piper_msgs
-  3 packages had stderr output: piper_control piper_description piper_msgs
+  2 packages aborted: piper_description piper_msgs
+  3 packages had stderr output: piper_description piper_msgs
 ```
 
 ```shell
@@ -375,12 +373,11 @@ source /opt/ros/foxy/setup.bash
 
 ```shell
 Starting >>> piper   
-Starting >>> piper_control
 Starting >>> piper_description
 Starting >>> piper_msgs
 Finished <<< piper [0.33s]                                                                                                              
 Finished <<< piper_description [0.42s]                                                                                     
---- stderr: piper_control                                                               
+--- stderr: piper_description                                                               
 CMake Error at CMakeLists.txt:7 (find_package):
   By not providing "Findcontroller_manager.cmake" in CMAKE_MODULE_PATH this
   project has asked CMake to find a package configuration file provided by
@@ -399,13 +396,12 @@ CMake Error at CMakeLists.txt:7 (find_package):
 
 
 ---
-Failed   <<< piper_control [0.80s, exited with code 1]
+Failed   <<< piper_description [0.80s, exited with code 1]
 Aborted  <<< piper_msgs [3.28s]                               
 
 Summary: 2 packages finished [3.38s]
-  1 package failed: piper_control
   1 package aborted: piper_msgs
-  1 package had stderr output: piper_control
+  1 package had stderr output: piper_description
 ```
 
 ```shell
