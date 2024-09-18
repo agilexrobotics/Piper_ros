@@ -8,7 +8,7 @@ Test:
 
 |PYTHON |STATE|
 |---|---|
-|![foxy](https://img.shields.io/badge/ros-foxy-blue.svg)|![Pass](https://img.shields.io/badge/Pass-blue.svg)|
+|![humble](https://img.shields.io/badge/ros-humble-blue.svg)|![Pass](https://img.shields.io/badge/Pass-blue.svg)|
 
 ## Installation
 
