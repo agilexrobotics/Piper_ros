@@ -531,7 +531,7 @@
   </joint>
 
 <!-- controller -->
-  <xacro:macro name="transmission_block" params="tran_name joint_name motor_name">
+  <!-- <xacro:macro name="transmission_block" params="tran_name joint_name motor_name">
     <transmission name="${tran_name}">
         <type>transmission_interface/SimpleTransmission</type>
         <joint name="${joint_name}">
@@ -551,9 +551,9 @@
   <xacro:transmission_block tran_name="tran5" joint_name="joint5" motor_name="motor5"/>
   <xacro:transmission_block tran_name="tran6" joint_name="joint6" motor_name="motor6"/>
   <xacro:transmission_block tran_name="tran7" joint_name="joint7" motor_name="motor7"/>
-  <xacro:transmission_block tran_name="tran8" joint_name="joint8" motor_name="motor8"/>
+  <xacro:transmission_block tran_name="tran8" joint_name="joint8" motor_name="motor8"/> -->
 <!-- gazebo -->
-  <gazebo>
+  <!-- <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
         <robotNamespace>/piper_description</robotNamespace>
         <legacyModeNS>true</legacyModeNS>
@@ -594,5 +594,5 @@
  
   <gazebo reference="link8">
     <material>Gazebo/Orange</material>
-  </gazebo>
+  </gazebo> -->
 </robot>
