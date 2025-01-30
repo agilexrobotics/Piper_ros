@@ -77,7 +77,7 @@ class C_PiperRosNode():
         self.joint_states.effort = [0.0] * 7
         
         # 创建piper类并打开can接口
-        self.piper = C_PiperInterface(can_name=self.can_port)
+        self.piper = C_PiperInterface()
         self.piper.ConnectPort()
         self.piper.MotionCtrl_2(0x01, 0x01, 30,0)
 
