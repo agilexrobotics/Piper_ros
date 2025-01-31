@@ -412,6 +412,13 @@
       <origin xyz="0 0 0" rpy="0 1.5708 0"/>
   </joint>
 
+  <link name="link_ik_spinning"/>
+  <joint name="joint_ik_spinning" type="fixed">
+      <parent link="link5"/>
+      <child link="link_ik_spinning"/>
+      <origin xyz="0 0.22603 0.0014165" rpy="-1.5708 -1.5708 0"/>
+  </joint>
+
   <link
     name="link7">
     <inertial>
