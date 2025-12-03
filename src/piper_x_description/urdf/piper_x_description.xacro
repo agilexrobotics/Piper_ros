@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot
+  name="piper_x"
+  xmlns:xacro="http://ros.org/wiki/xacro">
+<!-- world -->
+  <link name="world"/>
+  <joint name="fixed_base_joint" type="fixed">
+      <parent link="world"/>
+      <child link="base_link"/>
+  </joint>
+<!-- arm -->
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.0085443 4.8839E-05 0.044762"
+        rpy="0 0 0" />
+      <mass
+        value="0.47421" />
+      <inertia
+        ixx="0.00044509"
+        ixy="5.5896E-07"
+        ixz="1.9736E-05"
+        iyy="0.00049109"
+        iyz="7.1578E-07"
+        izz="0.00055319" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/base_link.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.59216 0.61961 0.65098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/base_link.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="link1">
+    <inertial>
+      <origin
+        xyz="0.0011378 -0.0021698 -0.014112"
+        rpy="0 0 0" />
+      <mass
+        value="0.16975" />
+      <inertia
+        ixx="6.466E-05"
+        ixy="7.2374E-07"
+        ixz="5.1556E-08"
+        iyy="8.8951E-05"
+        iyz="1.0827E-07"
+        izz="8.3142E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint1.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.59216 0.61961 0.65098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint1.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.123"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="link1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-2.618"
+      upper="2.618"
+      effort="100"
+      velocity="10" />
+  </joint>
+  <link
+    name="link2">
+    <inertial>
+      <origin
+        xyz="0.21036 -0.01651 0.0015283"
+        rpy="0 0 0" />
+      <mass
+        value="0.37783" />
+      <inertia
+        ixx="0.00022199"
+        ixy="3.2631E-05"
+        ixz="-6.2643E-06"
+        iyy="0.0019854"
+        iyz="-3.0109E-06"
+        izz="0.0020664" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint2.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 0.875" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint2.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint2"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="1.5708 -0.13586 3.1416" />
+    <parent
+      link="link1" />
+    <child
+      link="link2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="3.14"
+      effort="100"
+      velocity="10" />
+  </joint>
+  <link
+    name="link3">
+    <inertial>
+      <origin
+        xyz="0.15119 -0.0060622 0.0013657"
+        rpy="0 0 0" />
+      <mass
+        value="0.28003" />
+      <inertia
+        ixx="9.0698E-05"
+        ixy="8.6875E-07"
+        ixz="-2.0769E-06"
+        iyy="0.00035668"
+        iyz="1.1019E-06"
+        izz="0.00039114" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint3.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.59216 0.61961 0.65098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint3.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint3"
+    type="revolute">
+    <origin
+      xyz="0.28503 0 0"
+      rpy="0 0 2.8377" />
+    <parent
+      link="link2" />
+    <child
+      link="link3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-2.9671"
+      upper="0"
+      effort="100"
+      velocity="10" />
+  </joint>
+  <link
+    name="link4">
+    <inertial>
+      <origin
+        xyz="0.041795 -0.032887 -0.0088781"
+        rpy="0 0 0" />
+      <mass
+        value="0.1211" />
+      <inertia
+        ixx="5.6173E-05"
+        ixy="-8.0853E-07"
+        ixz="-5.604E-07"
+        iyy="6.2662E-05"
+        iyz="-1.3477E-07"
+        izz="6.8648E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint4.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 0.875" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint4.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint4"
+    type="revolute">
+    <origin
+      xyz="0.27264 0 0"
+      rpy="0 0 0.075129" />
+    <parent
+      link="link3" />
+    <child
+      link="link4" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="100"
+      velocity="10" />
+  </joint>
+  <link
+    name="link5">
+    <inertial>
+      <origin
+        xyz="0.0041507 0.00024807 -0.015852"
+        rpy="0 0 0" />
+      <mass
+        value="0.094498" />
+      <inertia
+        ixx="4.0846E-05"
+        ixy="5.2625E-08"
+        ixz="7.7998E-07"
+        iyy="2.5458E-05"
+        iyz="-2.0306E-07"
+        izz="3.3445E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint5.dae" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.59216 0.61961 0.65098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/joint5.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint5"
+    type="revolute">
+    <origin
+      xyz="0.076857 0.00062395 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="link4" />
+    <child
+      link="link5" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="100"
+      velocity="10" />
+  </joint>
+  <link
+    name="link6">
+    <inertial>
+      <origin
+        xyz="4.4377E-07 -1.9614E-05 0.031556"
+        rpy="0 0 0" />
+      <mass
+        value="0.0061311" />
+      <inertia
+        ixx="5.1682E-07"
+        ixy="9.18E-25"
+        ixz="1.1291E-22"
+        iyy="5.1683E-07"
+        iyz="2.6088E-09"
+        izz="9.833E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0.002 0.0078 0.06"
+        rpy="-1.57 0 3.14" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/gripper_base_100_v2.dae" scale="0.8 0.8 0.8"/>
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0.002 0.0078 0.06"
+        rpy="-1.57 0 3.14" />
+      <geometry>
+        <mesh
+          filename="package://piper_x_description/meshes/dae/gripper_base_100_v2.dae" scale="0.8 0.8 0.8"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint6"
+    type="revolute">
+    <origin
+      xyz="0.035 0 0"
+      rpy="1.5708 0 1.5708" />
+    <parent
+      link="link5" />
+    <child
+      link="link6" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="100"
+      velocity="10" />
+  </joint>
+
+<link name="link7">
+  <visual>
+    <geometry>
+      <mesh filename="package://piper_x_description/meshes/dae/joint7.dae" />
+    </geometry>
+    <material name="LightGrey">
+      <color rgba="0.7 0.7 0.7 1.0"/>
+    </material>
+  </visual>
+  <collision>
+    <geometry>
+      <mesh filename="package://piper_x_description/meshes/dae/joint7.dae" />
+    </geometry>
+  </collision>
+  <inertial>
+    <mass value="0.0"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+  </inertial>
+</link>
+
+    <joint name="joint7" type="prismatic">
+        <origin xyz="0 0 0.13503" rpy="1.5708 0 1.5708" />
+        <parent link="link6" />
+        <child link="link7" />
+        <axis xyz="0 0 -1" />
+        <limit lower="0" upper="0.05" effort="100" velocity="1" />
+    </joint>
+
+    <link name="link8">
+        <inertial>
+        <origin
+            xyz="0.000277816920932317 0.0467673824063769 -0.00921030054508036"
+            rpy="0 0 0" />
+        <mass value="0.0264822021416248" />
+        <inertia
+            ixx="9.99779119357223E-06"
+            ixy="-1.57542283433504E-07"
+            ixz="2.71367446701359E-08"
+            iyy="6.17952441557932E-06"
+            iyz="1.58939319453383E-06"
+            izz="1.4210192754512E-05" />
+        </inertial>
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://piper_x_description/meshes/dae/joint8.dae" />
+        </geometry>
+        <material name="">
+            <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+        </material>
+        </visual>
+        <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://piper_x_description/meshes/dae/joint8.dae" />
+        </geometry>
+        </collision>
+    </link>
+    <joint name="joint8" type="prismatic">
+        <origin xyz="0 0 0.13503" rpy="-1.5708 0 1.5708" />
+        <parent link="link6" />
+        <child link="link8" />
+        <axis xyz="0 0 1" />
+        <limit lower="-0.05" upper="0" effort="100" velocity="1" />
+    </joint>
+
+<!-- controller -->
+  <xacro:macro name="transmission_block" params="tran_name joint_name motor_name">
+    <transmission name="${tran_name}">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${joint_name}">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="$motor_name">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <xacro:transmission_block tran_name="tran1" joint_name="joint1" motor_name="motor1"/>
+  <xacro:transmission_block tran_name="tran2" joint_name="joint2" motor_name="motor2"/>
+  <xacro:transmission_block tran_name="tran3" joint_name="joint3" motor_name="motor3"/>
+  <xacro:transmission_block tran_name="tran4" joint_name="joint4" motor_name="motor4"/>
+  <xacro:transmission_block tran_name="tran5" joint_name="joint5" motor_name="motor5"/>
+  <xacro:transmission_block tran_name="tran6" joint_name="joint6" motor_name="motor6"/>
+  <xacro:transmission_block tran_name="tran7" joint_name="joint7" motor_name="motor7"/>
+  <xacro:transmission_block tran_name="tran8" joint_name="joint8" motor_name="motor8"/>
+<!-- gazebo -->
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <robotNamespace>/piper_x</robotNamespace>
+        <legacyModeNS>true</legacyModeNS>
+    </plugin>
+  </gazebo>
+ 
+  <!-- <gazebo reference="base_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="link1">
+    <material>Gazebo/White</material>
+  </gazebo>
+ 
+  <gazebo reference="link2">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <gazebo reference="link3">
+    <material>Gazebo/White</material>
+  </gazebo>
+ 
+  <gazebo reference="link4">
+    <material>Gazebo/Black</material>
+  </gazebo>
+ 
+  <gazebo reference="link5">
+    <material>Gazebo/White</material>
+  </gazebo>
+ 
+  <gazebo reference="link6">
+    <material>Gazebo/White</material>
+  </gazebo>
+ 
+  <gazebo reference="link7">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+ 
+  <gazebo reference="link8">
+    <material>Gazebo/Orange</material>
+  </gazebo> -->
+</robot>
