@@ -40,78 +40,19 @@ ros2 launch piper_gazebo piper_no_gripper_gazebo.launch.py
 
 ## 2 mujoco仿真
 
-### 2.1 mujoco210和mujoco-py的安装
+### 2.1 环境配置
 
-#### 2.1.1 安装mujoco
-
-1、[下载mujoco210](https://github.com/google-deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz)
-
-2、解压
+使用 `uv` 自动配置 MuJoCo Python 环境：
 
 ```bash
-mkdir ~/.mujoco
-cd (压缩包所在目录)
-tar -zxvf mujoco210-linux-x86_64.tar.gz -C ~/.mujoco
-```
-
-3、添加环境变量
-
-```bash
-echo "export LD_LIBRARY_PATH=~/.mujoco/mujoco210/bin:\$LD_LIBRARY_PATH" >> ~/.bashrc
-source ~/.bashrc
-```
-
-4、测试
-
-```bash
-cd ~/.mujoco/mujoco210/bin
-./simulate ../model/humanoid.xml
-```
-
-#### 2.1.2 安装mujoco-py
-
-1、下载源码
-
-```bash
-git clone https://github.com/openai/mujoco-py.git
-```
-
-2、安装(这一部可以在conda环境中进行)
-
-```bash
-cd mujoco-py
-pip3 install -U 'mujoco-py<2.2,>=2.1'
-pip3 install -r requirements.txt
-pip3 install -r requirements.dev.txt
-python3 setup.py install
+cd piper_ros
+uv sync
+source .venv/bin/activate
 sudo apt install libosmesa6-dev
 sudo apt install patchelf
 ```
 
-3、添加环境变量
-
-```bash
-echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia" >> ~/.bashrc
-source ~/.bashrc
-```
-
-4、测试
-
-注：**有时会在导入mujoco_py报错，按照报错要求更新numpy、cmake等版本即可**
-
-python运行
-
-```python
-import mujoco_py
-import os
-mj_path = mujoco_py.utils.discover_mujoco()
-xml_path = os.path.join(mj_path, 'model', 'humanoid.xml')
-model = mujoco_py.load_model_from_path(xml_path)
-sim = mujoco_py.MjSim(model)
-print(sim.data.qpos)
-sim.step()
-print(sim.data.qpos)
-```
+注：**项目已配置最新的 MuJoCo Python 绑定，无需手动安装 mujoco210 或 mujoco-py**
 
 ### 2.2 piper mujoco仿真(有夹爪)
 
