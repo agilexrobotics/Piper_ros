@@ -40,78 +40,19 @@ ros2 launch piper_gazebo piper_no_gripper_gazebo.launch.py
 
 ## 2 Mujoco Simulation
 
-### 2.1 Installing Mujoco 2.1.0 and mujoco-py
+### 2.1 Environment Setup
 
-#### 2.1.1 Install Mujoco
+Use `uv` to automatically configure the MuJoCo Python environment:
 
-1. [Download Mujoco 2.1.0](https://github.com/google-deepmind/mujoco/releases/download/2.1.0/mujoco210-linux-x86_64.tar.gz)
+```bash
+cd piper_ros
+uv sync
+source .venv/bin/activate
+sudo apt install libosmesa6-dev
+sudo apt install patchelf
+```
 
-2. Extract the files:
-
-    ```bash
-    mkdir ~/.mujoco
-    cd (directory where the tar file is located)
-    tar -zxvf mujoco210-linux-x86_64.tar.gz -C ~/.mujoco
-    ```
-
-3. Add environment variables:
-
-    ```bash
-    echo "export LD_LIBRARY_PATH=~/.mujoco/mujoco210/bin:\$LD_LIBRARY_PATH" >> ~/.bashrc
-    source ~/.bashrc
-    ```
-
-4. Test the installation:
-
-    ```bash
-    cd ~/.mujoco/mujoco210/bin
-    ./simulate ../model/humanoid.xml
-    ```
-
-#### 2.1.2 Install mujoco-py
-
-1. Clone the source code:
-
-    ```bash
-    git clone https://github.com/openai/mujoco-py.git
-    ```
-
-2. Install (this step can be performed in a conda environment):
-
-    ```bash
-    cd ~/mujoco-py
-    pip3 install -U 'mujoco-py<2.2,>=2.1'
-    pip3 install -r requirements.txt
-    pip3 install -r requirements.dev.txt
-    python3 setup.py install
-    sudo apt install libosmesa6-dev
-    sudo apt install patchelf
-    ```
-
-3. Add environment variables:
-
-    ```bash
-    echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia" >> ~/.bashrc
-    source ~/.bashrc
-    ```
-
-4. Test the installation:
-
-    **Note:** If you encounter an error when importing `mujoco_py`, update `numpy`, `cmake`, or any other dependencies as instructed by the error message.
-
-    Run the following Python script:
-
-    ```python
-    import mujoco_py
-    import os
-    mj_path = mujoco_py.utils.discover_mujoco()
-    xml_path = os.path.join(mj_path, 'model', 'humanoid.xml')
-    model = mujoco_py.load_model_from_path(xml_path)
-    sim = mujoco_py.MjSim(model)
-    print(sim.data.qpos)
-    sim.step()
-    print(sim.data.qpos)
-    ```
+**Note:** The project is configured with the latest MuJoCo Python bindings. No need to manually install mujoco210 or mujoco-py.
 
 ### 2.2 Piper Mujoco Simulation (With Gripper)
 
