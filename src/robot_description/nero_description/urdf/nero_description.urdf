@@ -229,7 +229,7 @@
             </geometry>
         </visual>
         <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <origin xyz="0 0 0" rpy="-1.57 -1.57 -1.57"/>
             <geometry>
                 <mesh filename="package://nero_description/meshes/stand_v1.dae"/>
             </geometry>
