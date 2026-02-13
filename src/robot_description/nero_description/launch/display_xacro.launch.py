@@ -9,8 +9,8 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
-    urdf_tutorial_path = get_package_share_path('piper_h_description')
-    default_model_path = urdf_tutorial_path / 'urdf/piper_h_description.xacro'
+    urdf_tutorial_path = get_package_share_path('nero_description')
+    default_model_path = urdf_tutorial_path / 'urdf/nero_description_with_right_hand.xacro'
     default_rviz_config_path = urdf_tutorial_path / 'rviz/piper_ctrl.rviz'
 
     gui_arg = DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],

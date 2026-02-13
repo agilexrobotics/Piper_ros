@@ -9,8 +9,8 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
-    urdf_tutorial_path = get_package_share_path('nero_description')
-    default_model_path = urdf_tutorial_path / 'urdf/nero_description_stand_v2.urdf'
+    urdf_tutorial_path = get_package_share_path('revo2_description')
+    default_model_path = urdf_tutorial_path / 'urdf/revo2_left_hand.urdf'
     default_rviz_config_path = urdf_tutorial_path / 'rviz/piper_ctrl.rviz'
 
     gui_arg = DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],

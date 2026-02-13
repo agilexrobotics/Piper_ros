@@ -78,6 +78,111 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        left_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_index_distal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_index_proximal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_index_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_index_touch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_middle_distal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_middle_proximal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_middle_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_middle_touch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_pinky_distal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_pinky_proximal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_pinky_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_pinky_touch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_ring_distal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_ring_proximal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_ring_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_ring_touch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_thumb_distal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_thumb_metacarpal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_thumb_proximal_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_thumb_tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_thumb_touch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         link1:
           Alpha: 1
           Show Axes: false
@@ -134,6 +239,50 @@ Visualization Manager:
           Value: false
         end_effector:
           Value: true
+        left_base_link:
+          Value: true
+        left_index_distal_link:
+          Value: false
+        left_index_proximal_link:
+          Value: false
+        left_index_tip_link:
+          Value: false
+        left_index_touch_link:
+          Value: false
+        left_middle_distal_link:
+          Value: false
+        left_middle_proximal_link:
+          Value: false
+        left_middle_tip_link:
+          Value: false
+        left_middle_touch_link:
+          Value: false
+        left_pinky_distal_link:
+          Value: false
+        left_pinky_proximal_link:
+          Value: false
+        left_pinky_tip_link:
+          Value: false
+        left_pinky_touch_link:
+          Value: false
+        left_ring_distal_link:
+          Value: false
+        left_ring_proximal_link:
+          Value: false
+        left_ring_tip_link:
+          Value: false
+        left_ring_touch_link:
+          Value: false
+        left_thumb_distal_link:
+          Value: false
+        left_thumb_metacarpal_link:
+          Value: false
+        left_thumb_proximal_link:
+          Value: false
+        left_thumb_tip_link:
+          Value: false
+        left_thumb_touch_link:
+          Value: false
         link1:
           Value: false
         link2:
@@ -166,7 +315,38 @@ Visualization Manager:
                       link6:
                         link7:
                           end_effector:
-                            {}
+                            left_base_link:
+                              left_index_proximal_link:
+                                left_index_distal_link:
+                                  left_index_tip_link:
+                                    {}
+                                  left_index_touch_link:
+                                    {}
+                              left_middle_proximal_link:
+                                left_middle_distal_link:
+                                  left_middle_tip_link:
+                                    {}
+                                  left_middle_touch_link:
+                                    {}
+                              left_pinky_proximal_link:
+                                left_pinky_distal_link:
+                                  left_pinky_tip_link:
+                                    {}
+                                  left_pinky_touch_link:
+                                    {}
+                              left_ring_proximal_link:
+                                left_ring_distal_link:
+                                  left_ring_tip_link:
+                                    {}
+                                  left_ring_touch_link:
+                                    {}
+                              left_thumb_metacarpal_link:
+                                left_thumb_proximal_link:
+                                  left_thumb_distal_link:
+                                    left_thumb_tip_link:
+                                      {}
+                                    left_thumb_touch_link:
+                                      {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -222,18 +402,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.019870052114129066
-        Y: 0.34807419776916504
-        Z: 0.4285705089569092
+        X: 0.17082761228084564
+        Y: 0.11862585693597794
+        Z: 0.4722592234611511
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7303980588912964
+      Pitch: 0.5553982257843018
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.53355073928833
+      Yaw: 3.838548421859741
     Saved: ~
 Window Geometry:
   Displays:
