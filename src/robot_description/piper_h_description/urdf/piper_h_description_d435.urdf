@@ -216,7 +216,7 @@
     <origin rpy="-1.5708 -0.087272 0" xyz="0 0 0"/>
     <parent link="link4"/>
     <child link="link5"/>
-    <axis xyz="0 0 -1"/>
+    <axis xyz="0 0 1"/>
     <limit effort="100" lower="-1.22" upper="1.22" velocity="3"/>
   </joint>
   <link name="link6">
