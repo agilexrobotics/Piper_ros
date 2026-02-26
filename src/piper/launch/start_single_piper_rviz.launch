@@ -8,7 +8,7 @@
     <param name="auto_enable" value="$(arg auto_enable)" />
     <param name="gripper_val_mutiple" value="2" />
     <!-- <param name="rviz_ctrl_flag" value="true" /> -->
-    <param name="girpper_exist" value="true" />
+    <param name="gripper_exist" value="true" />
     <remap from="joint_ctrl_single" to="/joint_states" />
   </node>
 </launch>
