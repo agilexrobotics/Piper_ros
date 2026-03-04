@@ -103,7 +103,7 @@
       xyz="0 0 1" />
     <limit
       lower="-2.618"
-      upper="2.168"
+      upper="2.618"
       effort="100"
       velocity="5" />
   </joint>
@@ -427,4 +427,5 @@
         <legacyModeNS>true</legacyModeNS>
     </plugin>
   </gazebo>
+
 </robot>
