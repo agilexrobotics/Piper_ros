@@ -60,7 +60,8 @@ def generate_launch_description():
         robot_description_semantic = {'robot_description_semantic': f.read()}
     
     # Controller configuration
-    moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/moveit_controllers.yaml')
+    # moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/moveit_controllers.yaml') # REAL controllers
+    moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/fake_moveit_controllers.yaml')
     
     # Kinematics configuration
     kinematics_yaml = load_yaml('piper_moveit_config', 'config/kinematics.yaml')

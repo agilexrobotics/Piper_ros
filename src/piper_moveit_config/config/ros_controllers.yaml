@@ -5,7 +5,7 @@ moveit_sim_hw_interface:
 
 # Settings for ros_control control loop
 generic_hw_control_loop:
-  loop_hz: 300
+  loop_hz: 200
   cycle_time_error_threshold: 0.01
 
 # Settings for ros_control hardware interface
@@ -47,6 +47,11 @@ arm_controller:
   #   joint6: { trajectory: 0.1, goal: 0.1 }
   # state_publish_rate: 25
   # action_monitor_rate: 10
+  command_interfaces:
+    - position
+  state_interfaces:
+    - position
+    - velocity
 
 # Controllers for the gripper
 gripper_controller:
@@ -54,6 +59,11 @@ gripper_controller:
   joints:
     - joint7
     - joint8
+  command_interfaces:
+    - position
+  state_interfaces:
+    - position
+    - velocity
   # constraints:
   #   goal_time: 1.0
   #   stopped_velocity_tolerance: 0.05
@@ -61,3 +71,7 @@ gripper_controller:
   #   joint8: { trajectory: 0.1, goal: 0.1 }
   # state_publish_rate: 25
   # action_monitor_rate: 10
+
+joint_state_broadcaster:
+  ros__parameters:
+    publish_topic: "/joint_states"
