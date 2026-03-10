@@ -2,10 +2,11 @@ import os
 import subprocess
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 import yaml
+from launch.actions import TimerAction
 
 
 def load_yaml(package_name, file_path):
@@ -42,17 +43,20 @@ def generate_launch_description():
     )
     
     # ==========================================================================
-    # Load Robot Description (from XACRO)
-    # ==========================================================================
-    piper_description_path = get_package_share_directory('piper_description')
-    urdf_file = os.path.join(piper_description_path, 'urdf', 'piper_description.xacro')
-    robot_description_content = subprocess.check_output(['xacro', urdf_file]).decode('utf-8')
-    robot_description = {'robot_description': robot_description_content}
-    
-    # ==========================================================================
     # Load Configurations
     # ==========================================================================
     piper_moveit_config_path = get_package_share_directory('piper_moveit_config')
+
+    # ==========================================================================
+    # Load Robot Description (from XACRO)
+    # ==========================================================================
+    piper_description_path = get_package_share_directory('piper_description')
+    urdf_file = os.path.join(piper_moveit_config_path, 'config', 'piper.urdf.xacro')
+    # urdf_file = os.path.join(piper_description_path, 'urdf', 'piper_description.xacro')
+    robot_description_content = subprocess.check_output(['xacro', urdf_file]).decode('utf-8')
+    robot_description = {'robot_description': robot_description_content}
+    robot_description = {"robot_description": Command(["xacro ", urdf_file])}
+    
     
     # Semantic description (SRDF)
     srdf_file = os.path.join(piper_moveit_config_path, 'config', 'piper.srdf')
@@ -60,8 +64,10 @@ def generate_launch_description():
         robot_description_semantic = {'robot_description_semantic': f.read()}
     
     # Controller configuration
-    # moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/moveit_controllers.yaml') # REAL controllers
-    moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/fake_moveit_controllers.yaml')
+    moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/moveit_controllers.yaml') # REAL controllers
+    # moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/fake_moveit_controllers.yaml')
+    # controllers_yaml = load_yaml('piper_moveit_config', 'config/ros2_controllers.yaml')
+    controllers_yaml_path = os.path.join(piper_moveit_config_path, "config", "ros2_controllers.yaml")
     
     # Kinematics configuration
     kinematics_yaml = load_yaml('piper_moveit_config', 'config/kinematics.yaml')
@@ -73,11 +79,61 @@ def generate_launch_description():
     # ==========================================================================
     # Hardware Interface Node (Fake execution for simulation)
     # ==========================================================================
-    fake_hardware_node = Node(
-        package='piper_moveit_config',
-        executable='fake_hardware_interface.py',
-        name='fake_hardware_interface',
-        output='screen'
+    # fake_hardware_node = Node(
+    #     package='piper_moveit_config',
+    #     executable='fake_hardware_interface.py',
+    #     name='fake_hardware_interface',
+    #     output='screen'
+    # )
+    ros2_control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[
+            robot_description,
+            controllers_yaml_path
+        ],
+        output="screen",
+    )
+    joint_state_broadcaster_spawner = TimerAction(
+        period=3.0,
+        actions=[
+            Node(
+                package="controller_manager",
+                executable="spawner.py",
+                arguments=[
+                    "joint_state_broadcaster",
+                    "--controller-manager",
+                    "/controller_manager"
+                ],
+            )
+        ]
+    )
+
+    # velocity_controller_spawner = TimerAction(
+    #     period=4.0,
+    #     actions=[
+    #         Node(
+    #             package="controller_manager",
+    #             executable="spawner.py",
+    #             arguments=["joint_group_velocity_controller", "--controller-manager", "/controller_manager"],
+    #         )
+    #     ]
+    # )
+    arm_controller_spawner = TimerAction(
+        period=5.0,
+        actions=[Node(
+        package="controller_manager",
+        executable="spawner.py",
+        arguments=["arm_controller", "--controller-manager", "/controller_manager"],
+    )])
+
+    gripper_controller_spawner = TimerAction(
+        period=6.0,
+        actions=[Node(
+            package="controller_manager",
+            executable="spawner.py",
+            arguments=["gripper_controller", "--controller-manager", "/controller_manager"],
+        )]
     )
     
     # ==========================================================================
@@ -158,8 +214,13 @@ def generate_launch_description():
     # ==========================================================================
     return LaunchDescription([
         debug_arg,
-        fake_hardware_node,
+        # fake_hardware_node,
+        ros2_control_node,
         robot_state_publisher_node,
+        joint_state_broadcaster_spawner,
+        arm_controller_spawner,
+        gripper_controller_spawner,
+        # velocity_controller_spawner,
         move_group_node,
         rviz_node,
     ])
