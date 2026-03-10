@@ -62,7 +62,7 @@
     <disable_collisions link1="link7" link2="link8" reason="Default"/>
     
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values.-->
-    <group_state name="home" group="arm">
+    <group_state name="zero" group="arm">
         <joint name="joint1" value="0"/>
         <joint name="joint2" value="0"/>
         <joint name="joint3" value="0"/>
