@@ -1,0 +1,49 @@
+planning_plugin: ompl_interface/OMPLPlanner
+request_adapters: >-
+  default_planner_request_adapters/AddTimeOptimalParameterization
+  default_planner_request_adapters/FixWorkspaceBounds
+  default_planner_request_adapters/FixStartStateBounds
+  default_planner_request_adapters/FixStartStateCollision
+  default_planner_request_adapters/FixStartStatePathConstraints
+start_state_max_bounds_error: 0.1
+
+planner_configs:
+  SBL:
+    type: geometric::SBL
+  EST:
+    type: geometric::EST
+  LBKPIECE:
+    type: geometric::LBKPIECE
+  BKPIECE:
+    type: geometric::BKPIECE
+  KPIECE:
+    type: geometric::KPIECE
+  RRT:
+    type: geometric::RRT
+  RRTConnect:
+    type: geometric::RRTConnect
+  RRTstar:
+    type: geometric::RRTstar
+  TRRT:
+    type: geometric::TRRT
+  PRM:
+    type: geometric::PRM
+  PRMstar:
+    type: geometric::PRMstar
+
+arm:
+  default_planner_config: RRTConnect
+  planner_configs:
+    - SBL
+    - EST
+    - LBKPIECE
+    - BKPIECE
+    - KPIECE
+    - RRT
+    - RRTConnect
+    - RRTstar
+    - TRRT
+    - PRM
+    - PRMstar
+  projection_evaluator: joints(joint1,joint2)
+  longest_valid_segment_fraction: 0.01

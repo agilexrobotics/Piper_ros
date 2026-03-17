@@ -3,10 +3,11 @@ import subprocess
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, LaunchConfiguration
+from launch.conditions import LaunchConfigurationEquals
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 import yaml
-from launch.actions import TimerAction
+from launch.actions import TimerAction, OpaqueFunction
 
 
 def load_yaml(package_name, file_path):
@@ -19,8 +20,24 @@ def load_yaml(package_name, file_path):
     except EnvironmentError:
         return None
 
+# ==========================================================================
+# Launch Arguments
+# ==========================================================================
+debug_arg = DeclareLaunchArgument(
+    'debug',
+    default_value='false',
+    description='Enable debug output'
+)
 
-def generate_launch_description():
+gripper_arg = DeclareLaunchArgument(
+    'use_gripper',
+    default_value='true',
+    description='Whether to include gripper in the MoveIt configuration'
+)
+
+launch_args = [debug_arg, gripper_arg]
+
+def launch_setup(context):
     """
     Minimal launch file for Piper robot with MoveIt in simulation.
     
@@ -34,15 +51,6 @@ def generate_launch_description():
     """
     
     # ==========================================================================
-    # Launch Arguments
-    # ==========================================================================
-    debug_arg = DeclareLaunchArgument(
-        'debug',
-        default_value='false',
-        description='Enable debug output'
-    )
-    
-    # ==========================================================================
     # Load Configurations
     # ==========================================================================
     piper_moveit_config_path = get_package_share_directory('piper_moveit_config')
@@ -51,7 +59,31 @@ def generate_launch_description():
     # Load Robot Description (from XACRO)
     # ==========================================================================
     piper_description_path = get_package_share_directory('piper_description')
-    urdf_file = os.path.join(piper_moveit_config_path, 'config', 'piper.urdf.xacro')
+    # if use_gripper is false, load the no_gripper version of the xacro and configs
+    use_gripper = LaunchConfiguration('use_gripper').perform(context)
+    if use_gripper.lower() == 'false':
+        urdf_file = os.path.join(piper_moveit_config_path, 'config/no_gripper', 'piper.urdf.xacro')
+        srdf_file = os.path.join(piper_moveit_config_path, 'config/no_gripper', 'piper.srdf')
+        # Controller configuration
+        moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/no_gripper/moveit_controllers.yaml') # REAL controllers
+        controllers_yaml_path = os.path.join(piper_moveit_config_path, "config/no_gripper", "ros2_controllers.yaml")
+        # Kinematics configuration
+        kinematics_yaml = load_yaml('piper_moveit_config', 'config/no_gripper/kinematics.yaml')
+        joint_limits_yaml = load_yaml('piper_moveit_config', 'config/no_gripper/joint_limits.yaml')
+        # Planning configuration
+        ompl_planning_yaml = load_yaml('piper_moveit_config', 'config/no_gripper/ompl_planning.yaml')
+    else:
+        urdf_file = os.path.join(piper_moveit_config_path, 'config', 'piper.urdf.xacro')
+        srdf_file = os.path.join(piper_moveit_config_path, 'config', 'piper.srdf')
+        # Controller configuration
+        moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/moveit_controllers.yaml') # REAL controllers
+        controllers_yaml_path = os.path.join(piper_moveit_config_path, "config", "ros2_controllers.yaml")
+        # Kinematics configuration
+        kinematics_yaml = load_yaml('piper_moveit_config', 'config/kinematics.yaml')
+        joint_limits_yaml = load_yaml('piper_moveit_config', 'config/joint_limits.yaml')
+        # Planning configuration
+        ompl_planning_yaml = load_yaml('piper_moveit_config', 'config/ompl_planning.yaml')
+    
     # urdf_file = os.path.join(piper_description_path, 'urdf', 'piper_description.xacro')
     robot_description_content = subprocess.check_output(['xacro', urdf_file]).decode('utf-8')
     robot_description = {'robot_description': robot_description_content}
@@ -59,22 +91,9 @@ def generate_launch_description():
     
     
     # Semantic description (SRDF)
-    srdf_file = os.path.join(piper_moveit_config_path, 'config', 'piper.srdf')
     with open(srdf_file, 'r') as f:
         robot_description_semantic = {'robot_description_semantic': f.read()}
     
-    # Controller configuration
-    moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/moveit_controllers.yaml') # REAL controllers
-    # moveit_controllers_yaml = load_yaml('piper_moveit_config', 'config/fake_moveit_controllers.yaml')
-    # controllers_yaml = load_yaml('piper_moveit_config', 'config/ros2_controllers.yaml')
-    controllers_yaml_path = os.path.join(piper_moveit_config_path, "config", "ros2_controllers.yaml")
-    
-    # Kinematics configuration
-    kinematics_yaml = load_yaml('piper_moveit_config', 'config/kinematics.yaml')
-    
-    # Planning configuration
-    joint_limits_yaml = load_yaml('piper_moveit_config', 'config/joint_limits.yaml')
-    ompl_planning_yaml = load_yaml('piper_moveit_config', 'config/ompl_planning.yaml')
     
     # ==========================================================================
     # Hardware Interface Node (Fake execution for simulation)
@@ -133,6 +152,7 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner.py",
         arguments=["arm_velocity_controller", "--controller-manager", "/controller_manager"], # for velocity control
+        condition=LaunchConfigurationEquals('use_gripper', 'true')
     )])
 
     gripper_controller_spawner = TimerAction(
@@ -141,6 +161,7 @@ def generate_launch_description():
             package="controller_manager",
             executable="spawner.py",
             arguments=["gripper_controller", "--controller-manager", "/controller_manager"],
+            condition=LaunchConfigurationEquals('use_gripper', 'true')
         )]
     )
     
@@ -220,7 +241,7 @@ def generate_launch_description():
     # ==========================================================================
     # Launch Description
     # ==========================================================================
-    return LaunchDescription([
+    return [
         debug_arg,
         # fake_hardware_node,
         ros2_control_node,
@@ -231,4 +252,10 @@ def generate_launch_description():
         gripper_controller_spawner,
         move_group_node,
         rviz_node,
-    ])
+    ]
+
+def generate_launch_description():
+    opfunc = OpaqueFunction(function=launch_setup)
+    ld = LaunchDescription(launch_args)
+    ld.add_action(opfunc)
+    return ld
