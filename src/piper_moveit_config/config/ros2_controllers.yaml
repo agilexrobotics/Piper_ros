@@ -5,6 +5,9 @@ controller_manager:
 
     arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
+    
+    arm_velocity_controller:
+      type: forward_command_controller/ForwardCommandController
 
     # comment this out if no gripper
     gripper_controller:
@@ -27,6 +30,18 @@ arm_controller:
     state_interfaces:
       - position
       - velocity
+
+# Velocity controller used for Cartesian twist control
+arm_velocity_controller:
+  ros__parameters:
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+    interface_name: velocity
 
 # comment this out if no gripper  
 gripper_controller:
