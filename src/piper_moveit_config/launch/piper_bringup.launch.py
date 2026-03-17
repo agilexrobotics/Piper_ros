@@ -124,7 +124,15 @@ def generate_launch_description():
         actions=[Node(
         package="controller_manager",
         executable="spawner.py",
-        arguments=["arm_controller", "--controller-manager", "/controller_manager"],
+        arguments=["arm_controller", "--controller-manager", "/controller_manager"], # for position control
+    )])
+
+    arm_controller_velocity_spawner = TimerAction(
+        period=5.0,
+        actions=[Node(
+        package="controller_manager",
+        executable="spawner.py",
+        arguments=["arm_velocity_controller", "--controller-manager", "/controller_manager"], # for velocity control
     )])
 
     gripper_controller_spawner = TimerAction(
@@ -219,8 +227,8 @@ def generate_launch_description():
         robot_state_publisher_node,
         joint_state_broadcaster_spawner,
         arm_controller_spawner,
+        arm_controller_velocity_spawner,
         gripper_controller_spawner,
-        # velocity_controller_spawner,
         move_group_node,
         rviz_node,
     ])
