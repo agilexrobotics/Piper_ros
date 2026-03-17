@@ -145,25 +145,26 @@ def launch_setup(context):
         executable="spawner.py",
         arguments=["arm_controller", "--controller-manager", "/controller_manager"], # for position control
     )])
+    controller_list = [arm_controller_spawner]
 
-    arm_controller_velocity_spawner = TimerAction(
-        period=5.0,
-        actions=[Node(
-        package="controller_manager",
-        executable="spawner.py",
-        arguments=["arm_velocity_controller", "--controller-manager", "/controller_manager"], # for velocity control
-        condition=LaunchConfigurationEquals('use_gripper', 'true')
-    )])
-
-    gripper_controller_spawner = TimerAction(
-        period=6.0,
-        actions=[Node(
+    if use_gripper.lower() == 'true':
+        arm_controller_velocity_spawner = TimerAction(
+            period=5.0,
+            actions=[Node(
             package="controller_manager",
             executable="spawner.py",
-            arguments=["gripper_controller", "--controller-manager", "/controller_manager"],
-            condition=LaunchConfigurationEquals('use_gripper', 'true')
-        )]
-    )
+            arguments=["arm_velocity_controller", "--controller-manager", "/controller_manager"], # for velocity control
+        )])
+
+        gripper_controller_spawner = TimerAction(
+            period=6.0,
+            actions=[Node(
+                package="controller_manager",
+                executable="spawner.py",
+                arguments=["gripper_controller", "--controller-manager", "/controller_manager"],
+            )]
+        )
+        controller_list += [arm_controller_velocity_spawner, gripper_controller_spawner]
     
     # ==========================================================================
     # Robot State Publisher (Broadcasts TF from /joint_states)
@@ -247,9 +248,7 @@ def launch_setup(context):
         ros2_control_node,
         robot_state_publisher_node,
         joint_state_broadcaster_spawner,
-        arm_controller_spawner,
-        arm_controller_velocity_spawner,
-        gripper_controller_spawner,
+        *controller_list,
         move_group_node,
         rviz_node,
     ]
