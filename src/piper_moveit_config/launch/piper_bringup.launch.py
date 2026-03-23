@@ -113,31 +113,17 @@ def launch_setup(context):
         ],
         output="screen",
     )
-    joint_state_broadcaster_spawner = TimerAction(
-        period=3.0,
-        actions=[
-            Node(
-                package="controller_manager",
-                executable="spawner.py",
-                arguments=[
-                    "joint_state_broadcaster",
-                    "--controller-manager",
-                    "/controller_manager"
-                ],
-            )
+    js_node = Node(
+        package='piper_moveit_config',
+        executable='custom_js_broadcaster.py',
+        name='custom_js_broadcaster',
+        output='screen',
+        parameters=[
+            {'control_mode': 'position'},
+            {'use_gripper': LaunchConfiguration('use_gripper')},
         ]
     )
 
-    # velocity_controller_spawner = TimerAction(
-    #     period=4.0,
-    #     actions=[
-    #         Node(
-    #             package="controller_manager",
-    #             executable="spawner.py",
-    #             arguments=["joint_group_velocity_controller", "--controller-manager", "/controller_manager"],
-    #         )
-    #     ]
-    # )
     arm_controller_spawner = TimerAction(
         period=5.0,
         actions=[Node(
@@ -145,16 +131,16 @@ def launch_setup(context):
         executable="spawner.py",
         arguments=["arm_controller", "--controller-manager", "/controller_manager"], # for position control
     )])
-    controller_list = [arm_controller_spawner]
-
-    if use_gripper.lower() == 'true':
-        arm_controller_velocity_spawner = TimerAction(
+    arm_controller_velocity_spawner = TimerAction(
             period=5.0,
             actions=[Node(
             package="controller_manager",
             executable="spawner.py",
             arguments=["arm_velocity_controller", "--controller-manager", "/controller_manager"], # for velocity control
         )])
+    controller_list = [arm_controller_spawner, arm_controller_velocity_spawner]
+
+    if use_gripper.lower() == 'true':
 
         gripper_controller_spawner = TimerAction(
             period=6.0,
@@ -164,7 +150,7 @@ def launch_setup(context):
                 arguments=["gripper_controller", "--controller-manager", "/controller_manager"],
             )]
         )
-        controller_list += [arm_controller_velocity_spawner, gripper_controller_spawner]
+        controller_list += [gripper_controller_spawner]
     
     # ==========================================================================
     # Robot State Publisher (Broadcasts TF from /joint_states)
@@ -247,7 +233,7 @@ def launch_setup(context):
         # fake_hardware_node,
         ros2_control_node,
         robot_state_publisher_node,
-        joint_state_broadcaster_spawner,
+        js_node,
         *controller_list,
         move_group_node,
         rviz_node,
