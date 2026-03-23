@@ -4,9 +4,9 @@ import threading
 
 import rclpy
 from rclpy.node import Node
+from control_msgs.msg import JointTrajectoryControllerState
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64MultiArray
-from trajectory_msgs.msg import JointTrajectory
 
 
 class JointStatePublisher(Node):
@@ -40,12 +40,21 @@ class JointStatePublisher(Node):
 		self.joint_velocities = [0.0] * len(self.joint_names)
 		self.joint_efforts = [0.0] * len(self.joint_names)
 
-		self.joint_cmd_sub = self.create_subscription(
-			JointTrajectory,
+		self.arm_state_sub = self.create_subscription(
+			JointTrajectoryControllerState,
 			'~/arm_position_commands',
-			self.joint_cmd_callback,
+			self.arm_state_callback,
 			10,
 		)
+
+		self.gripper_state_sub = None
+		if use_gripper:
+			self.gripper_state_sub = self.create_subscription(
+				JointTrajectoryControllerState,
+				'/gripper_controller/state',
+				self.gripper_state_callback,
+				10,
+			)
 
 		self.arm_velocity_cmd_sub = self.create_subscription(
 			Float64MultiArray,
@@ -58,8 +67,8 @@ class JointStatePublisher(Node):
 		self.timer = self.create_timer(0.005, self.publish_joint_state)
 
 		self.get_logger().info(
-			"Minimal JointStatePublisher initialized (control_mode='%s', joints=%d)"
-			% ('velocity' if self.use_velocity_mode else 'position', len(self.joint_names))
+			"Minimal JointStatePublisher initialized (joints=%d, use_gripper=%s)"
+			% (len(self.joint_names), str(use_gripper).lower())
 		)
 
 	def _warn_throttle(self, key: str, message: str, period_sec: float = 2.0):
@@ -70,40 +79,39 @@ class JointStatePublisher(Node):
 			self.get_logger().warn(message)
 			self._last_warn_ns[key] = now_ns
 
-	def joint_cmd_callback(self, msg: JointTrajectory):
-		if self.use_velocity_mode:
-			self._warn_throttle(
-				'ignore_traj_in_velocity',
-				'Ignoring JointTrajectory command while in velocity mode.',
-			)
-			return
-
-		if not msg.points:
-			self.get_logger().warn('Received empty trajectory')
-			return
-
-		point = msg.points[0]
+	def _apply_controller_state(self, joint_names, positions, velocities, efforts):
 		with self._state_lock:
-			for index, joint_name in enumerate(msg.joint_names):
+			for index, joint_name in enumerate(joint_names):
 				mapped_index = self.joint_name_to_index.get(joint_name)
 				if mapped_index is None:
 					continue
 
-				if index < len(point.positions):
-					self.joint_positions[mapped_index] = point.positions[index]
-				if index < len(point.velocities):
-					self.joint_velocities[mapped_index] = point.velocities[index]
-				if index < len(point.effort):
-					self.joint_efforts[mapped_index] = point.effort[index]
+				if index < len(positions):
+					self.joint_positions[mapped_index] = positions[index]
+				if index < len(velocities):
+					self.joint_velocities[mapped_index] = velocities[index]
+				if index < len(efforts):
+					self.joint_efforts[mapped_index] = efforts[index]
+
+	def arm_state_callback(self, msg: JointTrajectoryControllerState):
+		actual = msg.actual
+		self._apply_controller_state(
+			msg.joint_names,
+			actual.positions,
+			actual.velocities,
+			actual.effort,
+		)
+
+	def gripper_state_callback(self, msg: JointTrajectoryControllerState):
+		actual = msg.actual
+		self._apply_controller_state(
+			msg.joint_names,
+			actual.positions,
+			actual.velocities,
+			actual.effort,
+		)
 
 	def arm_velocity_cmd_callback(self, msg: Float64MultiArray):
-		if not self.use_velocity_mode:
-			self._warn_throttle(
-				'ignore_vel_in_position',
-				'Ignoring Float64MultiArray velocity command while in position mode.',
-			)
-			return
-
 		if not msg.data:
 			self._warn_throttle(
 				'empty_velocity_cmd',
@@ -126,7 +134,7 @@ class JointStatePublisher(Node):
 	def publish_joint_state(self):
 		with self._state_lock:
 			now = self.get_clock().now()
-			if self.use_velocity_mode and self.has_velocity_command and self.has_last_publish_time:
+			if self.has_velocity_command and self.has_last_publish_time:
 				dt = (now - self.last_publish_time).nanoseconds / 1e9
 				if dt > 0.0:
 					for index in range(len(self.joint_positions)):

@@ -1,9 +1,7 @@
 import os
-import subprocess
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, LaunchConfiguration
-from launch.conditions import LaunchConfigurationEquals
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 import yaml
@@ -23,19 +21,13 @@ def load_yaml(package_name, file_path):
 # ==========================================================================
 # Launch Arguments
 # ==========================================================================
-debug_arg = DeclareLaunchArgument(
-    'debug',
-    default_value='false',
-    description='Enable debug output'
-)
-
 gripper_arg = DeclareLaunchArgument(
     'use_gripper',
     default_value='true',
     description='Whether to include gripper in the MoveIt configuration'
 )
 
-launch_args = [debug_arg, gripper_arg]
+launch_args = [gripper_arg]
 
 def launch_setup(context):
     """
@@ -58,7 +50,6 @@ def launch_setup(context):
     # ==========================================================================
     # Load Robot Description (from XACRO)
     # ==========================================================================
-    piper_description_path = get_package_share_directory('piper_description')
     # if use_gripper is false, load the no_gripper version of the xacro and configs
     use_gripper = LaunchConfiguration('use_gripper').perform(context)
     if use_gripper.lower() == 'false':
@@ -84,9 +75,6 @@ def launch_setup(context):
         # Planning configuration
         ompl_planning_yaml = load_yaml('piper_moveit_config', 'config/ompl_planning.yaml')
     
-    # urdf_file = os.path.join(piper_description_path, 'urdf', 'piper_description.xacro')
-    robot_description_content = subprocess.check_output(['xacro', urdf_file]).decode('utf-8')
-    robot_description = {'robot_description': robot_description_content}
     robot_description = {"robot_description": Command(["xacro ", urdf_file])}
     
     
@@ -119,20 +107,23 @@ def launch_setup(context):
         name='custom_js_broadcaster',
         output='screen',
         parameters=[
-            {'control_mode': 'position'},
             {'use_gripper': LaunchConfiguration('use_gripper')},
+        ],
+        remappings=[
+            ('~/arm_velocity_commands', '/arm_velocity_controller/commands'),
+            ('~/arm_position_commands', '/arm_controller/state'),
         ]
     )
 
     arm_controller_spawner = TimerAction(
-        period=5.0,
+        period=2.0,
         actions=[Node(
         package="controller_manager",
         executable="spawner.py",
         arguments=["arm_controller", "--controller-manager", "/controller_manager"], # for position control
     )])
     arm_controller_velocity_spawner = TimerAction(
-            period=5.0,
+            period=3.0,
             actions=[Node(
             package="controller_manager",
             executable="spawner.py",
@@ -229,8 +220,6 @@ def launch_setup(context):
     # Launch Description
     # ==========================================================================
     return [
-        debug_arg,
-        # fake_hardware_node,
         ros2_control_node,
         robot_state_publisher_node,
         js_node,
