@@ -15,6 +15,7 @@ install(DIRECTORY
 # Install Python scripts
 install(PROGRAMS
   scripts/fake_hardware_interface.py
+  scripts/custom_js_broadcaster.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
