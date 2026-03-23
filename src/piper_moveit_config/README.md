@@ -1,11 +1,11 @@
 # Piper MoveIt Configuration
-## WARNING: THE VAST MAJORITY OF THIS CODE WAS DEVELOPED WITH THE HELP OF GENERATIVE AI.
 This package was meant to only create a simulation environment in ROS2 Foxy MoveIt.
 It has NOT been debugged to use with a real robot.
 
+End effector velocity control has been developed in a [different repo](https://github.com/Agaggar/piper_ee_control).
+
 ## TL;DR
 `ros2 launch piper_moveit_config piper_bringup.launch.py`
-
 
 ## Overview
 This package provides MoveIt2 configuration for the Piper robot arm in ROS2 Foxy.
@@ -191,3 +191,5 @@ piper_moveit_config/
 - [MoveIt2 Documentation](https://moveit.picknik.ai/foxy/index.html)
 - [MoveIt2 Tutorials](https://moveit.picknik.ai/foxy/doc/tutorials/tutorials.html)
 - [OMPL Planners](https://ompl.kavrakilab.org/planners.html)
+
+## WARNING: THE VAST MAJORITY OF THIS CODE WAS DEVELOPED WITH THE HELP OF GENERATIVE AI.
