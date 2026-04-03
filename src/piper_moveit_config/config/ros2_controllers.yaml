@@ -1,0 +1,68 @@
+# This config file is used by ros2_control
+controller_manager:
+  ros__parameters:
+    update_rate: 200  # Hz
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    
+    arm_velocity_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    # comment this out if no gripper
+    gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+# Velocity controller used for Cartesian twist control
+arm_velocity_controller:
+  ros__parameters:
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+    interface_name: velocity
+
+# comment this out if no gripper  
+gripper_controller:
+  ros__parameters:
+    joints:
+      - joint7
+      - joint8
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+# KNOWN ISSUE WITH JOINT STATES WHERE THEY PUBLISH OUT OF ORDER
+# joint_state_broadcaster:
+#   ros__parameters:
+#     joints:
+#       - joint1
+#       - joint2
+#       - joint3
+#       - joint4
+#       - joint5
+#       - joint6
+#     publish_topic: "/joint_states"

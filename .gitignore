@@ -13,3 +13,5 @@ src/piper/backup
 *.zip
 *.tar
 src/analytical_solution
+.gitignore
+**/__pycache__/

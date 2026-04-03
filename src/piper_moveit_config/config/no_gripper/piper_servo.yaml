@@ -1,0 +1,57 @@
+# https://github.com/moveit/moveit2/blob/main/moveit_ros/moveit_servo/config/servo_parameters.yaml
+minimal_servo_node:
+  ros__parameters:
+    moveit_servo:
+      ## MoveIt group
+      move_group_name: arm
+
+      ## The link that will be controlled
+      ee_frame_name: gripper_base
+
+      ## Robot base frame
+      planning_frame: base_link
+
+      ## Command input type
+      command_in_type: speed_units
+
+      ## Topics for incoming commands
+      cartesian_command_in_topic: ~/delta_twist_cmds
+      joint_command_in_topic: ~/delta_joint_cmds
+
+      ## Output
+      command_out_topic: /arm_velocity_controller/commands # /arm_controller/joint_trajectory
+      command_out_type: std_msgs/Float64MultiArray # trajectory_msgs/JointTrajectory # don't change this
+      status_topic: ~/status
+
+      # Planning
+      joint_topic: /joint_states
+      monitored_planning_scene_topic: /planning_scene
+      check_octomap_collisions: false
+
+      robot_link_command_frame: base_link # frame of reference for commanded twist
+
+      scale:
+        linear: 0.2
+        rotational: 0.5
+        joint: 0.5
+
+      publish_period: 0.02
+
+      low_pass_filter_coeff: 2.0
+
+      incoming_command_timeout: 0.1
+
+      publish_joint_positions: false # if Float64MultiArray is used for output, then either pos or vel must be false
+      publish_joint_velocities: true
+      publish_joint_accelerations: false
+
+      lower_singularity_threshold: 17.0
+      hard_stop_singularity_threshold: 30.0
+
+      check_collisions: false
+      collision_check_rate: 10.0
+      collision_check_type: 'threshold_distance'
+      self_collision_proximity_threshold: 0.001
+      scene_collision_proximity_threshold: 0.01
+      collision_distance_safety_factor: 1.0
+      min_allowable_collision_distance: 0.001
