@@ -246,6 +246,7 @@ class PiperRosNode(Node):
         end_pos_stamp.pose = endpos
         end_pos_stamp.header.stamp = self.float_to_ros_time(new_time)
         # end_pos_stamp.header.stamp = self.get_clock().now().to_msg()
+        end_pos_stamp.header.frame_id = "base_link"
         self.end_pose_stamped_pub.publish(end_pos_stamp)
 
     def pos_callback(self, pos_data):
